@@ -11,7 +11,6 @@ import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import barqsoft.footballscores.BuildConfig;
 import barqsoft.footballscores.R;
@@ -20,6 +19,8 @@ import timber.log.Timber;
 
 public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
 
+    public static final String ACTION_DATA_UPDATED =
+            "barqsoft.footballscores.app.ACTION_DATA_UPDATED";
     public static final int SYNC_INTERVAL = 10; // for testing purposes, setting this to 10 seconds
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
@@ -109,6 +110,10 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+    public static void initializeSyncAdapter(Context context) {
+        getSyncAccount(context);
+    }
+
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         if (BuildConfig.DEBUG) {
@@ -116,9 +121,5 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         }
         Intent service_start = new Intent(getContext(), myFetchService.class);
         getContext().startService(service_start);
-    }
-
-    public static void initializeSyncAdapter(Context context) {
-        getSyncAccount(context);
     }
 }

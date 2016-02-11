@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import barqsoft.footballscores.BuildConfig;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Utilities;
 import barqsoft.footballscores.ViewHolder;
@@ -28,6 +29,7 @@ public class scoresAdapter extends CursorAdapter
     public static final int COL_MATCHTIME = 2;
     public double detail_match_id = 0;
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
+
     public scoresAdapter(Context context,Cursor cursor,int flags)
     {
         super(context,cursor,flags);
@@ -40,14 +42,15 @@ public class scoresAdapter extends CursorAdapter
         View mItem = LayoutInflater.from(context).inflate(R.layout.scores_list_item, parent, false);
         ViewHolder mHolder = new ViewHolder(mItem);
         mItem.setTag(mHolder);
-        //Log.v(FetchScoreTask.LOG_TAG,"new View inflated");
         return mItem;
     }
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor)
     {
-        Timber.d("bindView(View view, final Context context, Cursor cursor)");
+        if (BuildConfig.DEBUG) {
+            Timber.d("bindView(View view, final Context context, Cursor cursor)");
+        }
         final ViewHolder mHolder = (ViewHolder) view.getTag();
         mHolder.home_name.setText(cursor.getString(COL_HOME));
         mHolder.away_name.setText(cursor.getString(COL_AWAY));
@@ -59,8 +62,7 @@ public class scoresAdapter extends CursorAdapter
         mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(
                 cursor.getString(COL_AWAY)
         ));
-        //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
+
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = vi.inflate(R.layout.detail_fragment, null);
@@ -94,7 +96,9 @@ public class scoresAdapter extends CursorAdapter
 
     }
     public Intent createShareForecastIntent(String ShareText) {
-        Timber.d("createShareForecastIntent(String ShareText)");
+        if (BuildConfig.DEBUG) {
+            Timber.d("createShareForecastIntent(String ShareText)");
+        }
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");

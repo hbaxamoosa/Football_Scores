@@ -22,8 +22,9 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import barqsoft.footballscores.provider.DatabaseContract;
+import barqsoft.footballscores.BuildConfig;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.provider.DatabaseContract;
 import timber.log.Timber;
 
 /**
@@ -34,13 +35,17 @@ public class myFetchService extends IntentService
     public myFetchService()
     {
         super("myFetchService");
-        Timber.d("myFetchService()");
+        if (BuildConfig.DEBUG) {
+            Timber.d("myFetchService()");
+        }
     }
 
     @Override
     protected void onHandleIntent(Intent intent)
     {
-        Timber.d("onHandleIntent(Intent intent)");
+        if (BuildConfig.DEBUG) {
+            Timber.d("onHandleIntent(Intent intent)");
+        }
         getData("n2");
         getData("p2");
 
@@ -49,15 +54,18 @@ public class myFetchService extends IntentService
 
     private void getData (String timeFrame)
     {
-        Timber.d("getData (String timeFrame)");
+        if (BuildConfig.DEBUG) {
+            Timber.d("getData (String timeFrame)");
+        }
         //Creating fetch URL
-        final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
+        final String BASE_URL = "http://api.football-data.org/v1/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
-        //final String QUERY_MATCH_DAY = "matchday";
 
-        Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
-                appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-        //Log.v(LOG_TAG, "The url we are looking at is: "+fetch_build.toString()); //log spam
+        Uri fetch_build = Uri.parse(BASE_URL).buildUpon().appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
+        if (BuildConfig.DEBUG) {
+            Timber.v("The url we are looking at is: " + fetch_build.toString());
+        }
+
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
         String JSON_data = null;
@@ -90,6 +98,7 @@ public class myFetchService extends IntentService
                 return;
             }
             JSON_data = buffer.toString();
+
         }
         catch (Exception e)
         {
@@ -113,15 +122,13 @@ public class myFetchService extends IntentService
         }
         try {
             if (JSON_data != null) {
-                //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
+                // This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
                 JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
                 if (matches.length() == 0) {
-                    //if there is no data, call the function on dummy data
-                    //this is expected behavior during the off season.
+                    // if there is no data, call the function on dummy data this is expected behavior during the off season.
                     processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
                 }
-
 
                 processJSONdata(JSON_data, getApplicationContext(), true);
             } else {
@@ -134,7 +141,8 @@ public class myFetchService extends IntentService
             Timber.e(e.getMessage());
         }
     }
-    private void processJSONdata (String JSONdata,Context mContext, boolean isReal)
+
+    private void processJSONdata(String JSONdata, Context mContext, boolean isReal)
     {
 
         Timber.d("processJSONdata (String JSONdata,Context mContext, boolean isReal)");
@@ -154,8 +162,8 @@ public class myFetchService extends IntentService
         final String EREDIVISIE = "404";
 
 
-        final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
-        final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
+        final String SEASON_LINK = "http://api.football-data.org/v1/soccerseasons/";
+        final String MATCH_LINK = "http://api.football-data.org/v1/fixtures/";
         final String FIXTURES = "fixtures";
         final String LINKS = "_links";
         final String SOCCER_SEASON = "soccerseason";
@@ -208,7 +216,7 @@ public class myFetchService extends IntentService
                     match_id = match_id.replace(MATCH_LINK, "");
                     if(!isReal){
                         //This if statement changes the match ID of the dummy data so that it all goes into the database
-                        match_id=match_id+Integer.toString(i);
+                        match_id = match_id + Integer.toString(i);
                     }
 
                     mDate = match_data.getString(MATCH_DATE);
@@ -233,7 +241,9 @@ public class myFetchService extends IntentService
                     }
                     catch (Exception e)
                     {
-                        Timber.d("error here!");
+                        if (BuildConfig.DEBUG) {
+                            Timber.d("error here!");
+                        }
                         Timber.e(e.getMessage());
                     }
                     Home = match_data.getString(HOME_TEAM);
@@ -251,17 +261,11 @@ public class myFetchService extends IntentService
                     match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL,Away_goals);
                     match_values.put(DatabaseContract.scores_table.LEAGUE_COL,League);
                     match_values.put(DatabaseContract.scores_table.MATCH_DAY,match_day);
-                    //log spam
-
-                    //Log.v(LOG_TAG,match_id);
-                    //Log.v(LOG_TAG,mDate);
-                    //Log.v(LOG_TAG,mTime);
-                    //Log.v(LOG_TAG,Home);
-                    //Log.v(LOG_TAG,Away);
-                    //Log.v(LOG_TAG,Home_goals);
-                    //Log.v(LOG_TAG,Away_goals);
 
                     values.add(match_values);
+
+                    // add test data to insert Today scores
+                    // addTestTodayData(values);
                 }
             }
             int inserted_data = 0;
@@ -270,13 +274,31 @@ public class myFetchService extends IntentService
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
 
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+            if (BuildConfig.DEBUG) {
+                Timber.v("Succesfully Inserted : " + String.valueOf(inserted_data));
+            }
         }
         catch (JSONException e)
         {
             Timber.e(e.getMessage());
         }
 
+    }
+
+    private void addTestTodayData(Vector<ContentValues> values) {
+        // test data to force scores for Today
+        ContentValues match_values = new ContentValues();
+        match_values.put(DatabaseContract.scores_table.MATCH_ID, "12345");
+        match_values.put(DatabaseContract.scores_table.DATE_COL, "2016-02-10");
+        match_values.put(DatabaseContract.scores_table.TIME_COL, "13:00");
+        match_values.put(DatabaseContract.scores_table.HOME_COL, "Manchester United FC");
+        match_values.put(DatabaseContract.scores_table.AWAY_COL, "Arsenal London FC");
+        match_values.put(DatabaseContract.scores_table.HOME_GOALS_COL, "2");
+        match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, "1");
+        match_values.put(DatabaseContract.scores_table.LEAGUE_COL, "PREMIER_LEAGUE");
+        match_values.put(DatabaseContract.scores_table.MATCH_DAY, "10");
+
+        values.add(match_values);
     }
 
     public static class AlarmReceiver extends BroadcastReceiver {

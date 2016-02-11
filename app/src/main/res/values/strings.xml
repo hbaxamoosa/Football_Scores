@@ -39,4 +39,20 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type" translatable="false">barqsoft.footballscores</string>
     <string name="content_authority" translatable="false">barqsoft.footballscores</string>
+
+    <!-- handle network connectivity in MainScreenFragment.java -->
+    <string name="no_network" translatable="true">Oops, seems you are not connected to Internet. Please retry when you are connected.</string>
+    <string name="no_network_dialog_title" translatable="true">Internet Needed to Fetch Football Scores</string>
+    <string name="server_down" translatable="true">No football scores available. \nThe server is not returning data.</string>
+    <string name="button_retry" translatable="true">Retry</string>
+    <string name="button_OK" translatable="true">OK</string>
+
+    <!-- Strings related to Widgets -->
+    <string name="title_football_scores_widget" translatable="true">Football Scores</string>
+    <string name="no_fixtures_for_day" translatable="true">No matches for this day.</string>
+    <string name="team_crest" translatable="true">Team crest</string>
+    <string name="accessibility_home_crest" translatable="true">home team icon</string>
+    <string name="accessibility_away_crest" translatable="true">guest team icon</string>
+    <string name="football_score_today" translatable="true">Football Score Today</string>
+    <string name="no_match" translatable="true">No match today.</string>
 </resources>
