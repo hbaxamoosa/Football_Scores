@@ -133,6 +133,6 @@ public class FootballScoresWidgetIntentService extends IntentService {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     private void setRemoteContentDescription(RemoteViews views, String description) {
-        views.setContentDescription(R.id.home_team_crest, description);
+        views.setContentDescription(R.id.home_crest, description);
     }
 }

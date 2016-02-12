@@ -13,6 +13,7 @@
     <string name="premierleague" translatable="true">Premier League</string>
     <string name="primeradivison" translatable="true">Primera Division</string>
     <string name="seriaa" translatable="true">Serie A</string>
+    <string name="unknown" translatable="true">Not known League, please report</string>
     <string name="matchday_text" translatable="true">Match day</string>
     <string name="group_stage_text" translatable="true">Group stages</string>
     <string name="first_knockout_round" translatable="true">First knockout round</string>
@@ -55,4 +56,6 @@
     <string name="accessibility_away_crest" translatable="true">guest team icon</string>
     <string name="football_score_today" translatable="true">Football Score Today</string>
     <string name="no_match" translatable="true">No match today.</string>
+
+    <string name="share_button" translatable="false">Share button</string>
 </resources>

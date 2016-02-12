@@ -53,14 +53,16 @@ public class scoresAdapter extends CursorAdapter
         }
         final ViewHolder mHolder = (ViewHolder) view.getTag();
         mHolder.home_name.setText(cursor.getString(COL_HOME));
+        mHolder.home_name.setContentDescription(cursor.getString(COL_HOME));
         mHolder.away_name.setText(cursor.getString(COL_AWAY));
+        mHolder.away_name.setContentDescription(cursor.getString(COL_AWAY));
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
+        mHolder.date.setContentDescription(cursor.getString(COL_MATCHTIME));
         mHolder.score.setText(Utilities.getScores(cursor.getInt(COL_HOME_GOALS),cursor.getInt(COL_AWAY_GOALS)));
+        mHolder.score.setContentDescription(Utilities.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
-        mHolder.home_crest.setImageResource(Utilities.getTeamCrestByTeamName(
-                cursor.getString(COL_HOME)));
-        mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(
-                cursor.getString(COL_AWAY)
+        mHolder.home_crest.setImageResource(Utilities.getTeamCrestByTeamName(cursor.getString(COL_HOME)));
+        mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(cursor.getString(COL_AWAY)
         ));
 
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()

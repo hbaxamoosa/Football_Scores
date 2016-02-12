@@ -17,12 +17,18 @@ public class Utilities
         }
         switch (league_num)
         {
-            case SERIE_A : return "Seria A";
-            case PREMIER_LEGAUE : return "Premier League";
-            case CHAMPIONS_LEAGUE : return "UEFA Champions League";
-            case PRIMERA_DIVISION : return "Primera Division";
-            case BUNDESLIGA : return "Bundesliga";
-            default: return "Not known League Please report";
+            case SERIE_A:
+                return String.valueOf(R.string.seriaa);
+            case PREMIER_LEGAUE:
+                return String.valueOf(R.string.premierleague);
+            case CHAMPIONS_LEAGUE:
+                return String.valueOf(R.string.champions_league);
+            case PRIMERA_DIVISION:
+                return String.valueOf(R.string.primeradivison);
+            case BUNDESLIGA:
+                return String.valueOf(R.string.bundesliga);
+            default:
+                return String.valueOf(R.string.unknown);
         }
     }
 
